@@ -20,7 +20,7 @@ export namespace CommandIDs {
 }
 
 const BluetoothManagerPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
-  id: 'bluetooh-manager:bluetooth-manager-plugin',
+  id: 'bluetooth-manager:bluetooth-manager-plugin',
   description: 'Provides the bluetooth manager',
   provides: IBluetoothManager,
   autoStart: true,
@@ -40,7 +40,7 @@ const BluetoothManagerPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
 };
 
 const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
-  id: 'bluetooh-manager:bluetooth-sidebar-plugin',
+  id: 'bluetooth-manager:bluetooth-sidebar-plugin',
   description:
     'Provides the connected bluetooth devices dialog to populate the sidebar.',
   requires: [IRunningSessionManagers, ITranslator, IBluetoothManager],
