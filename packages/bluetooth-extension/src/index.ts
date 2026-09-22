@@ -91,8 +91,6 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
             bluetoothManager.deviceTypeRegistry.deviceTypes.forEach(
               async item => {
                 if (item.deviceType === result.value) {
-                  console.log('Just before calling connect method')
-
                   const body = new Widget();
                   if (item.withImage) {
                     const img = document.createElement('img');
@@ -107,14 +105,9 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
                       Dialog.okButton({ label: 'Close' }),
                     ]
                   })
-
                   try {
                     dialog.launch();
                     await bluetoothManager.connect(item);
-                  }
-                  catch (error) {
-                    console.log("Something went wrong:", error);
-
                   } finally {
                     dialog.dispose();
                   }
