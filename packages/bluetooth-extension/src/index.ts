@@ -15,7 +15,6 @@ import {
 
 import { Widget } from '@lumino/widgets';
 
-
 export namespace CommandIDs {
   export const openDeviceRegistryDialog =
     'bluetooth-manager:open-dialog-for-devices-registry';
@@ -87,7 +86,6 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
           ]
         }).then(async result => {
           if (result.button.accept) {
-
             bluetoothManager.deviceTypeRegistry.deviceTypes.forEach(
               async item => {
                 if (item.deviceType === result.value) {
@@ -101,17 +99,14 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
                   const dialog = new Dialog({
                     title: item.instructions,
                     body: body,
-                    buttons: [
-                      Dialog.okButton({ label: 'Close' }),
-                    ]
-                  })
+                    buttons: [Dialog.okButton({ label: 'Close' })]
+                  });
                   try {
                     dialog.launch();
                     await bluetoothManager.connect(item);
                   } finally {
                     dialog.dispose();
                   }
-
                 } else {
                   console.warn(
                     'There is no corresponding item in the registry!'

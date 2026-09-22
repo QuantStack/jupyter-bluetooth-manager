@@ -33,7 +33,6 @@ export class BluetoothManager implements IBluetoothManager {
   async connect(
     registryItem: IDeviceTypeRegistryItem
   ): Promise<BluetoothManager.Device | undefined> {
-
     const native = await this.requestDevice(registryItem);
     if (native) {
       const device = await registryItem.factory(native);
@@ -184,7 +183,6 @@ export namespace BluetoothManager {
         throw new Error('Server is not defined.');
       }
     }
-
 
     async disconnect(): Promise<void> {
       if (this.native) {
