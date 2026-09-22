@@ -105,8 +105,7 @@ export class BluetoothManager implements IBluetoothManager {
         registryItem.options
       );
       return native;
-    }
-    else {
+    } else {
       return;
     }
   }
