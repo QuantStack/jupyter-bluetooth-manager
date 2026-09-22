@@ -105,7 +105,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
                     dialog.launch();
                     await bluetoothManager.connect(item);
                   } finally {
-                    dialog.dispose();
+                    dialog.resolve();
                   }
                 } else {
                   console.warn(
