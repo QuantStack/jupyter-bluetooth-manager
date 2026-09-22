@@ -33,7 +33,7 @@ export class BluetoothManager implements IBluetoothManager {
   async connect(
     registryItem: IDeviceTypeRegistryItem
   ): Promise<BluetoothManager.Device | undefined> {
-  
+
     const native = await this.requestDevice(registryItem);
     if (native) {
       const device = await registryItem.factory(native);
@@ -101,17 +101,10 @@ export class BluetoothManager implements IBluetoothManager {
   ): Promise<BluetoothDevice | undefined> {
     const isWebBluetoothSupported = await this.checkWebBluetoothSupport();
     if (isWebBluetoothSupported) {
-
-      try {
-        const native = await navigator.bluetooth.requestDevice(
-          registryItem.options
-        );
-
-        return native;
-      }
-      catch (error) {
-        console.error('Error occurred while requesting device:', error);
-      }
+      const native = await navigator.bluetooth.requestDevice(
+        registryItem.options
+      );
+      return native;
     }
     else {
       return;
