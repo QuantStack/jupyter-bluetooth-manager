@@ -14,8 +14,6 @@ import {
 } from '@jupyter-bluetooth-manager/bluetooth';
 
 import { Widget } from '@lumino/widgets';
-import movehubPairingSVG from '@jupyter-bluetooth-manager/bluetooth/style/images/MovehubPairing.svg';
-const movehubPairingSVGUrl = `data:image/svg+xml;base64,${btoa(movehubPairingSVG)}`;
 
 
 export namespace CommandIDs {
@@ -89,36 +87,37 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
           ]
         }).then(async result => {
           if (result.button.accept) {
-            const body = new Widget();
-
-            const img = document.createElement('img');
-            img.src = movehubPairingSVGUrl;
-            img.alt = 'Move Hub Pairing Instructions';
-            img.style.width = '400px';
-
-            body.node.appendChild(img);
 
             bluetoothManager.deviceTypeRegistry.deviceTypes.forEach(
               async item => {
                 if (item.deviceType === result.value) {
+                  console.log('Just before calling connect method')
+
+                  const body = new Widget();
+                  if (item.withImage) {
+                    const img = document.createElement('img');
+                    img.src = item.SVGUrl;
+                    img.alt = item.imageAlt;
+                    body.node.appendChild(img);
+                  }
                   const dialog = new Dialog({
-                    title: 'Please press the green button to pair your Movehub.',
+                    title: item.instructions,
                     body: body,
                     buttons: [
-                      Dialog.okButton({ label: 'Close after pairing' }),
+                      Dialog.okButton({ label: 'Close' }),
                     ]
                   })
-                  dialog.launch();
-                  console.log("In openDeviceRegistryDialog, the state of isPairingPopupStateOpen is: ", bluetoothManager.isPairingPopupStateOpen);
-                  await bluetoothManager.connect(item);
-                  bluetoothManager.pairingPopupStateChanged.connect((sender, value) => {
-                    if (value === false || value === undefined) {
-                      dialog.dispose();
-                    }
 
+                  try {
+                    dialog.launch();
+                    await bluetoothManager.connect(item);
+                  }
+                  catch (error) {
+                    console.log("Something went wrong:", error);
 
-                  });
-
+                  } finally {
+                    dialog.dispose();
+                  }
 
                 } else {
                   console.warn(

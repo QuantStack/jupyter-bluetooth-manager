@@ -20,13 +20,6 @@ export class BluetoothManager implements IBluetoothManager {
     this._deviceTypeRegistry = new BluetoothManager.DeviceTypeRegistry();
     this._deviceList = [];
     this._identifierRegistry = [];
-    this.isPairingPopupStateOpen = false;
-    console.log('In constructor of BluetoothManager, the initial state of isPairingPopupStateOpen is:', this.isPairingPopupStateOpen);
-    this.pairingPopupStateChanged = new Signal<this, boolean>(this);
-    this.pairingPopupStateChanged.connect((sender, value) => {
-
-      console.log('Pairing popup state changed:', value);
-    });
   }
 
   get deviceList(): Array<BluetoothManager.Device> {
@@ -40,6 +33,7 @@ export class BluetoothManager implements IBluetoothManager {
   async connect(
     registryItem: IDeviceTypeRegistryItem
   ): Promise<BluetoothManager.Device | undefined> {
+  
     const native = await this.requestDevice(registryItem);
     if (native) {
       const device = await registryItem.factory(native);
@@ -106,28 +100,17 @@ export class BluetoothManager implements IBluetoothManager {
     registryItem: IDeviceTypeRegistryItem
   ): Promise<BluetoothDevice | undefined> {
     const isWebBluetoothSupported = await this.checkWebBluetoothSupport();
-    console.log('In requestDevice, the state of isPairingPopupStateOpen before requesting device is:', this.isPairingPopupStateOpen);
     if (isWebBluetoothSupported) {
 
       try {
-        console.log("Native Chrome Bluetooth pop-up is now OPEN.");
-        this.isPairingPopupStateOpen = true;
-        this.pairingPopupStateChanged.emit(this.isPairingPopupStateOpen);
         const native = await navigator.bluetooth.requestDevice(
           registryItem.options
         );
-        this.isPairingPopupStateOpen = false;
-        this.pairingPopupStateChanged.emit(this.isPairingPopupStateOpen);
+
         return native;
       }
       catch (error) {
         console.error('Error occurred while requesting device:', error);
-        this.isPairingPopupStateOpen = false;
-        this.pairingPopupStateChanged.emit(this.isPairingPopupStateOpen);
-      }
-      finally {
-        this.isPairingPopupStateOpen = false;
-        this.pairingPopupStateChanged.emit(this.isPairingPopupStateOpen);
       }
     }
     else {
@@ -139,8 +122,6 @@ export class BluetoothManager implements IBluetoothManager {
   public deviceListChanged: Signal<this, Array<BluetoothManager.Device>>;
   private _deviceTypeRegistry: BluetoothManager.DeviceTypeRegistry;
   private _identifierRegistry: Array<string>;
-  public isPairingPopupStateOpen: boolean | undefined;
-  public pairingPopupStateChanged: Signal<this, boolean>;
 }
 
 export namespace BluetoothManager {
@@ -300,12 +281,14 @@ export interface IBluetoothManager {
   deviceListChanged: Signal<BluetoothManager, Array<BluetoothManager.Device>>;
   get deviceList(): Array<BluetoothManager.Device>;
   get deviceTypeRegistry(): BluetoothManager.DeviceTypeRegistry;
-  isPairingPopupStateOpen: boolean | undefined;
-  pairingPopupStateChanged: Signal<BluetoothManager, boolean>;
 }
 
 export interface IDeviceTypeRegistryItem {
   deviceType: string;
+  instructions: string;
+  SVGUrl: string;
+  withImage: boolean;
+  imageAlt: string;
   factory: (
     native: BluetoothDevice
   ) => Promise<BluetoothManager.Device | undefined>;
