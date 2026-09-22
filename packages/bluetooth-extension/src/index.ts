@@ -13,6 +13,11 @@ import {
   IBluetoothManager
 } from '@jupyter-bluetooth-manager/bluetooth';
 
+import { Widget } from '@lumino/widgets';
+import movehubPairingSVG from '@jupyter-bluetooth-manager/bluetooth/style/images/MovehubPairing.svg';
+const movehubPairingSVGUrl = `data:image/svg+xml;base64,${btoa(movehubPairingSVG)}`;
+
+
 export namespace CommandIDs {
   export const openDeviceRegistryDialog =
     'bluetooth-manager:open-dialog-for-devices-registry';
@@ -84,10 +89,37 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
           ]
         }).then(async result => {
           if (result.button.accept) {
+            const body = new Widget();
+
+            const img = document.createElement('img');
+            img.src = movehubPairingSVGUrl;
+            img.alt = 'Move Hub Pairing Instructions';
+            img.style.width = '400px';
+
+            body.node.appendChild(img);
+
             bluetoothManager.deviceTypeRegistry.deviceTypes.forEach(
               async item => {
                 if (item.deviceType === result.value) {
+                  const dialog = new Dialog({
+                    title: 'Please press the green button to pair your Movehub.',
+                    body: body,
+                    buttons: [
+                      Dialog.okButton({ label: 'Close after pairing' }),
+                    ]
+                  })
+                  dialog.launch();
+                  console.log("In openDeviceRegistryDialog, the state of isPairingPopupStateOpen is: ", bluetoothManager.isPairingPopupStateOpen);
                   await bluetoothManager.connect(item);
+                  bluetoothManager.pairingPopupStateChanged.connect((sender, value) => {
+                    if (value === false || value === undefined) {
+                      dialog.dispose();
+                    }
+
+
+                  });
+
+
                 } else {
                   console.warn(
                     'There is no corresponding item in the registry!'
