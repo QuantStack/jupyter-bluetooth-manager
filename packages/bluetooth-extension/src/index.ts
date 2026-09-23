@@ -20,7 +20,7 @@ export namespace CommandIDs {
 }
 
 const BluetoothManagerPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
-  id: 'bluetooh-manager:bluetooth-manager-plugin',
+  id: 'bluetooth-manager:bluetooth-manager-plugin',
   description: 'Provides the bluetooth manager',
   provides: IBluetoothManager,
   autoStart: true,
@@ -40,7 +40,7 @@ const BluetoothManagerPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
 };
 
 const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
-  id: 'bluetooh-manager:bluetooth-sidebar-plugin',
+  id: 'bluetooth-manager:bluetooth-sidebar-plugin',
   description:
     'Provides the connected bluetooth devices dialog to populate the sidebar.',
   requires: [IRunningSessionManagers, ITranslator, IBluetoothManager],
@@ -87,7 +87,19 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
             bluetoothManager.deviceTypeRegistry.deviceTypes.forEach(
               async item => {
                 if (item.deviceType === result.value) {
-                  await bluetoothManager.connect(item);
+                  const body = item.pairingInformationWidget;
+
+                  const dialog = new Dialog({
+                    title: 'Pairing information',
+                    body: body,
+                    buttons: [Dialog.okButton({ label: 'Close' })]
+                  });
+                  try {
+                    dialog.launch();
+                    await bluetoothManager.connect(item);
+                  } finally {
+                    dialog.resolve();
+                  }
                 } else {
                   console.warn(
                     'There is no corresponding item in the registry!'
