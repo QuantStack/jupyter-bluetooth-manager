@@ -13,7 +13,6 @@ import {
   IBluetoothManager
 } from '@jupyter-bluetooth-manager/bluetooth';
 
-import { Widget } from '@lumino/widgets';
 
 export namespace CommandIDs {
   export const openDeviceRegistryDialog =
@@ -89,15 +88,10 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
             bluetoothManager.deviceTypeRegistry.deviceTypes.forEach(
               async item => {
                 if (item.deviceType === result.value) {
-                  const body = new Widget();
-                  if (item.withImage) {
-                    const img = document.createElement('img');
-                    img.src = item.SVGUrl;
-                    img.alt = item.imageAlt;
-                    body.node.appendChild(img);
-                  }
+                  const body = item.pairingInformationWidget;
+                  
                   const dialog = new Dialog({
-                    title: item.instructions ?? "Select a device to pair.",
+                    title: "Pairing instruction",
                     body: body,
                     buttons: [Dialog.okButton({ label: 'Close' })]
                   });
