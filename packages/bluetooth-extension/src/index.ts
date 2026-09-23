@@ -91,7 +91,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
                   const body = item.pairingInformationWidget;
                   
                   const dialog = new Dialog({
-                    title: "Pairing instruction",
+                    title: "Pairing information",
                     body: body,
                     buttons: [Dialog.okButton({ label: 'Close' })]
                   });
