@@ -88,7 +88,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
             bluetoothManager.deviceTypeRegistry.deviceTypes.forEach(
               async item => {
                 if (item.deviceType === result.value) {
-                  const body = new PairingInfoWidget(item.pairingInfo)
+                  const body = new PairingInfoWidget(item.pairingInfo);
 
                   const dialog = new Dialog({
                     title: 'Pairing information',

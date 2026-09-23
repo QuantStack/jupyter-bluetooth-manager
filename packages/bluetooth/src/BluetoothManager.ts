@@ -284,9 +284,9 @@ export interface IDeviceTypeRegistryItem {
 }
 
 export interface IPairingInformation {
-    instructions: string | undefined,
-    SVGUrl: string | undefined,
-    imageAlt: string | undefined;
+  instructions: string | undefined;
+  SVGUrl: string | undefined;
+  imageAlt: string | undefined;
 }
 
 export interface IDeviceTypeRegistry {
