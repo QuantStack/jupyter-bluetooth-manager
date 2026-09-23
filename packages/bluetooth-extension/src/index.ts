@@ -97,7 +97,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
                     body.node.appendChild(img);
                   }
                   const dialog = new Dialog({
-                    title: item.instructions,
+                    title: item.instructions ?? "Select a device to pair.",
                     body: body,
                     buttons: [Dialog.okButton({ label: 'Close' })]
                   });
