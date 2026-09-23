@@ -23,9 +23,12 @@ export class PairingInfoWidget extends Widget {
 
       const img = document.createElement('img');
       img.src = pairingInformation.SVGUrl;
-      if (pairingInformation.imageAlt) img.alt = pairingInformation.imageAlt;
-      if (pairingInformation.imageWidth)
+      if (pairingInformation.imageAlt) {
+        img.alt = pairingInformation.imageAlt;
+      }
+      if (pairingInformation.imageWidth) {
         img.style.width = pairingInformation.imageWidth;
+      }
 
       imageContainer.appendChild(img);
       this.node.appendChild(imageContainer);
