@@ -4,6 +4,7 @@ export interface IPairingInformation {
     instructions: string | undefined,
     SVGUrl: string | undefined,
     imageAlt: string | undefined;
+    imageWidth: string | undefined;
 }
 
 export class PairingInfoWidget extends Widget {
@@ -24,7 +25,8 @@ export class PairingInfoWidget extends Widget {
             img.src = pairingInformation.SVGUrl;
             if (pairingInformation.imageAlt)
                 img.alt = pairingInformation.imageAlt;
-            img.style.width = '400px';
+            if (pairingInformation.imageWidth)
+            img.style.width = pairingInformation.imageWidth;
 
             imageContainer.appendChild(img);
             this.node.appendChild(imageContainer);
