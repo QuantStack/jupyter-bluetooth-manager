@@ -3,6 +3,7 @@ import { Token } from '@lumino/coreutils';
 import { IDeviceOptions } from './DeviceOptions';
 import { IDisposable } from '@lumino/disposable';
 import { Dialog, showDialog } from '@jupyterlab/apputils';
+import { IPairingInformation } from './PairingInfoWidget';
 
 export function buildCompleteIdentifier(native: BluetoothDevice): string {
   const identifier = native.name?.replace(/\s+/g, '-') + '-' + native.id;
@@ -281,12 +282,6 @@ export interface IDeviceTypeRegistryItem {
     native: BluetoothDevice
   ) => Promise<BluetoothManager.Device | undefined>;
   options: IDeviceOptions;
-}
-
-export interface IPairingInformation {
-  instructions: string | undefined;
-  SVGUrl: string | undefined;
-  imageAlt: string | undefined;
 }
 
 export interface IDeviceTypeRegistry {
