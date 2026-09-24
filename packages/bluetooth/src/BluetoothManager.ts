@@ -3,7 +3,7 @@ import { Token } from '@lumino/coreutils';
 import { IDeviceOptions } from './DeviceOptions';
 import { IDisposable } from '@lumino/disposable';
 import { Dialog, showDialog } from '@jupyterlab/apputils';
-import { Widget } from '@lumino/widgets';
+import { IPairingInformation } from './PairingInfoWidget';
 
 export function buildCompleteIdentifier(native: BluetoothDevice): string {
   const identifier = native.name?.replace(/\s+/g, '-') + '-' + native.id;
@@ -36,7 +36,7 @@ export class BluetoothManager implements IBluetoothManager {
   ): Promise<BluetoothManager.Device | undefined> {
     const native = await this.requestDevice(registryItem);
     if (native) {
-      const device = await registryItem.factory(native);
+      const device = await registryItem.createDevice(native);
       if (device && device.isConnected) {
         this._addDeviceToList(device);
         device.disconnected.connect(async () => {
@@ -276,9 +276,9 @@ export interface IBluetoothManager {
 
 export interface IDeviceTypeRegistryItem {
   deviceType: string;
-  pairingInformationWidget: Widget;
+  pairingInfo: IPairingInformation;
 
-  factory: (
+  createDevice: (
     native: BluetoothDevice
   ) => Promise<BluetoothManager.Device | undefined>;
   options: IDeviceOptions;

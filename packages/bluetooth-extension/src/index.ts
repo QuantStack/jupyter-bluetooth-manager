@@ -12,6 +12,7 @@ import {
   DropDownRegistry,
   IBluetoothManager
 } from '@jupyter-bluetooth-manager/bluetooth';
+import { PairingInfoWidget } from '@jupyter-bluetooth-manager/bluetooth/lib/PairingInfoWidget';
 
 export namespace CommandIDs {
   export const openDeviceRegistryDialog =
@@ -87,7 +88,7 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
             bluetoothManager.deviceTypeRegistry.deviceTypes.forEach(
               async item => {
                 if (item.deviceType === result.value) {
-                  const body = item.pairingInformationWidget;
+                  const body = new PairingInfoWidget(item.pairingInfo);
 
                   const dialog = new Dialog({
                     title: 'Pairing information',
