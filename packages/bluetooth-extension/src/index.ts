@@ -4,7 +4,11 @@ import {
 } from '@jupyterlab/application';
 import { ITranslator } from '@jupyterlab/translation';
 import { IRunningSessions, IRunningSessionManagers } from '@jupyterlab/running';
-import { addIcon, CommandToolbarButton } from '@jupyterlab/ui-components';
+import {
+  addIcon,
+  CommandToolbarButton,
+  copyIcon
+} from '@jupyterlab/ui-components';
 import { Dialog, showDialog } from '@jupyterlab/apputils';
 import {
   BluetoothDeviceRunningItem,
@@ -13,11 +17,13 @@ import {
   IBluetoothManager
 } from '@jupyter-bluetooth-manager/bluetooth';
 import { PairingInfoWidget } from '@jupyter-bluetooth-manager/bluetooth/lib/PairingInfoWidget';
+import { closeIcon } from '@jupyterlab/ui-components';
 
 export namespace CommandIDs {
   export const openDeviceRegistryDialog =
     'bluetooth-manager:open-dialog-for-devices-registry';
   export const disconnect = 'bluetooth-manager:disconnect-device';
+  export const copyDeviceId = 'bluetooth-manager:copy-device-id';
 }
 
 const BluetoothManagerPlugin: JupyterFrontEndPlugin<IBluetoothManager> = {
@@ -70,8 +76,23 @@ const BluetoothSidebarPlugin: JupyterFrontEndPlugin<void> = {
           throw new Error('No device provided or device is invalid');
         }
       },
-      caption: trans.__('Disconnect device'),
-      label: trans.__('Disconnect Device')
+      caption: trans.__('Disconnect'),
+      label: trans.__('Disconnect'),
+      icon: closeIcon
+    });
+
+    app.commands.addCommand(CommandIDs.copyDeviceId, {
+      execute: async args => {
+        const selectedDevice = bluetoothManager.deviceList.find(
+          device => device.native.id === (args.deviceID as string)
+        );
+        if (selectedDevice && args.deviceID) {
+          await navigator.clipboard.writeText(String(args.deviceID));
+        }
+      },
+      caption: trans.__('Copy device ID'),
+      label: trans.__('Copy Device ID'),
+      icon: copyIcon
     });
 
     app.commands.addCommand(CommandIDs.openDeviceRegistryDialog, {
