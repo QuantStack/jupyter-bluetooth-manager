@@ -132,7 +132,10 @@ export namespace BluetoothManager {
       this.isConnected = false;
       this.isDisposed = false;
       this.native = native;
-      this.contextCommands = ['bluetooth-manager:disconnect-device'];
+      this.contextCommands = [
+        'bluetooth-manager:disconnect-device',
+        'bluetooth-manager:copy-device-id'
+      ];
     }
 
     async connectAndGetAllServices(): Promise<
