@@ -28,7 +28,7 @@
         "type": "git",
         "url": "https://github.com/QuantStack/jupyter-bluetooth-manager.git"
     },
-    "private": true,
+    "private": false,
     "workspaces": [
         "packages/bluetooth",
         "packages/bluetooth-extension"
