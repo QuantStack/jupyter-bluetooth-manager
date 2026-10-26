@@ -101,10 +101,20 @@ export class BluetoothManager implements IBluetoothManager {
   ): Promise<BluetoothDevice | undefined> {
     const isWebBluetoothSupported = await this.checkWebBluetoothSupport();
     if (isWebBluetoothSupported) {
-      const native = await navigator.bluetooth.requestDevice(
-        registryItem.options
-      );
-      return native;
+      try {
+        const native = await navigator.bluetooth.requestDevice(
+          registryItem.options
+        );
+        return native;
+      } catch (err) {
+        if ((err as DOMException)?.name === 'NotFoundError') {
+          // The user closed the device chooser without selecting a
+          // device: this is a cancellation, not an error, so no device
+          // is returned.
+          return undefined;
+        }
+        throw err;
+      }
     } else {
       return;
     }
